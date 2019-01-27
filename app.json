@@ -1,0 +1,12 @@
+{
+  "name": "testroku",
+  "description": "A project for trying out Heroku stuff.",
+  "website": "https://github.com/christophevg/testroku",
+
+  "addons" : [
+    "mongolab",
+    "cloudmqtt"
+  ],
+
+  "success_url": "/"
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <title>TestRoku</title>
+    <style>
+      body {
+        padding: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <h1>TestRoku</h1>
+    
+    <div class="form-group">
+      <label for="cmd">Command</label>
+      <input type="input" class="form-control" id="cmd" aria-describedby="cmdHelp" placeholder="Enter cmd">
+      <small id="cmdHelp" class="form-text text-muted">A command to send to the backend.</small>
+      <label for="payload">Payload</label>
+      <input type="input" class="form-control" id="payload" aria-describedby="payloadHelp" placeholder="Enter payload">
+      <small id="payloadHelp" class="form-text text-muted">Payload to add to the command.</small>
+    </div>
+    <button id="submit" class="btn btn-primary">send</button>
+
+    <div class="form-group">
+      <label for="cmd">Output</label>
+      <input type="input" class="form-control" id="output" aria-describedby="outputHelp">
+      <small id="outputHelp" class="form-text text-muted">The output from the backend.</small>
+    </div>
+    <button id="refresh" class="btn btn-primary">refresh</button>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script>
+      $("#submit").click(function(){
+        post("/api/" + $("#cmd").val(), $("#payload").val(), function(response) {
+          console.log("cmd send");
+        })
+      });
+      
+      $("#refresh").click(function(){
+        console.log("refreshing...");
+        $.getJSON( "/api/" + $("#cmd").val(), function(data) {
+          $("#output").val(JSON.stringify(data));
+        });
+      });
+      
+      function post(url, doc, callback) {
+        ajax("post", url, doc, callback);
+      }
+  
+      function ajax(type, url, doc, callback) {
+        $.ajax( {
+          url: url,
+          type: type,
+          data: JSON.stringify(doc),
+          dataType: "json",
+          contentType: "application/json",
+          success: function(response) {
+            if(callback) { callback(response); }
+          },
+          error: function(response) {
+            console.log("failed to post", resource, doc, response);
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
